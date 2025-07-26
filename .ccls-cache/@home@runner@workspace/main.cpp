@@ -3,145 +3,203 @@
 #include <iostream>
 using namespace std;
 
-// Constants
-const int boardSize = 3;
-const char emptyCell = '*';
-const char player1Token = 'X';
-const char player2Token = 'O';
+//Initialize constants for board states and assign values to them. These constants will be used to determine the state of the game.
+const int PLAY = 0;
+const int TIE = 1;
+const int X_WINS = 2;
+const int O_WINS = 3;
 
-// Board state constants
-const int statePlay = 0;
-const int stateTie = 1;
-const int stateXWin = 2;
-const int stateOWin = 3;
+//Initialize constants to check for winner and assign values to them. These constants will be used to determine if there is a winner or if there are spaces left on the board.
+const int SPACE_LEFT = 0;
+const int NO_SPACE = 1;
+const int WINNER = 2;
 
-// Win check result constants
-const int resultSpaceLeft = 0;
-const int resultNoSpace = 1;
-const int resultWinner = 2;
+// Declare the board as a 2D array of characters
+char board[3][3];
 
-// Function Prototypes
-void initializeBoard(char board[boardSize][boardSize]);
-void displayBoard(const char board[boardSize][boardSize]);
-void placeToken(char token, char board[boardSize][boardSize]);
-void getLocation(int &row, int &col, const char board[boardSize][boardSize]);
-int getBoardState(char token, const char board[boardSize][boardSize]);
-int checkForWinner(char token, const char board[boardSize][boardSize]);
+// Function prototypes
+void initializeBoard();
+void displayBoard();
+void placeToken(char token);
+void getLocation(int& row, int& col);
+int getBoardState(char token);
+int checkForWinner(char token);
 
-// ---------------- Main Function ------------------
 int main() {
-    char board[boardSize][boardSize];
-    int boardState = statePlay;
+    int boardState = PLAY;
+    char player1_token = 'X';
+    char player2_token = 'O';
 
-    initializeBoard(board);
-    displayBoard(board);
+    // Initialize and display the empty board, then prompt the user to hit enter to continue
+    initializeBoard();
+    displayBoard();
+    cout << endl << "(Hit enter to continue)";
+    cin.get();
+    cout << endl << endl;
 
-    while (boardState == statePlay) {
-        // Player 1
-        placeToken(player1Token, board);
-        displayBoard(board);
-        boardState = getBoardState(player1Token, board);
-        if (boardState != statePlay) break;
+    while (boardState == PLAY) {
 
-        // Player 2
-        placeToken(player2Token, board);
-        displayBoard(board);
-        boardState = getBoardState(player2Token, board);
+        // Player 1's turn
+        cout << "Player 1's turn" << endl;
+        placeToken(player1_token);
+        displayBoard();
+        boardState = getBoardState(player1_token);
+
+        if (boardState == X_WINS) {
+            break;
+        }
+
+        if (boardState == PLAY) {
+            // Player 2's turn
+            cout << "Player 2's turn" << endl;
+            placeToken(player2_token);
+            displayBoard();
+            boardState = getBoardState(player2_token);
+        }
     }
 
-    // Final result
-    if (boardState == stateXWin)
-        cout << "Player 1 (X) wins!" << endl;
-    else if (boardState == stateOWin)
-        cout << "Player 2 (O) wins!" << endl;
-    else if (boardState == stateTie)
-        cout << "It's a tie!" << endl;
+    // Declare the winner or tie
+    if (boardState == X_WINS) {
+        cout << "Player 1 wins" << endl;
+    }
+    else if (boardState == O_WINS) {
+        cout << "Player 2 wins" << endl;
+    }
+    else if (boardState == TIE) {
+        cout << "Tie" << endl;
+    }
 
     return 0;
 }
-
-// 1. Initialize the board with '*'
-void initializeBoard(char board[boardSize][boardSize]) {
-    for (int i = 0; i < boardSize; ++i)
-        for (int j = 0; j < boardSize; ++j)
-            board[i][j] = emptyCell;
-}
-
-// 2. Display the board with row and column headers (1–3)
-void displayBoard(const char board[boardSize][boardSize]) {
-    cout << "   1 2 3" << endl;
-    for (int i = 0; i < boardSize; ++i) {
-        cout << i + 1 << "  ";
-        for (int j = 0; j < boardSize; ++j) {
-            cout << board[i][j] << " ";
+//Use the initializeBoard function to initialize the board with asterisks (*) to represent empty spaces. 
+void initializeBoard() {
+    for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < 3; j++) {
+            board[i][j] = '*';
         }
-        cout << endl;
     }
 }
 
-// 3. Place a token on the board
-void placeToken(char token, char board[boardSize][boardSize]) {
+//Use the displayBoard function to display the board.
+void displayBoard() {
+    cout << "    1   2   3" << endl;
+    cout << "   -----------" << endl;
+    for (int i = 0; i < 3; i++) {
+        cout << "|" << (i + 1) << "| ";
+        for (int j = 0; j < 3; j++) {
+            cout << board[i][j];
+            if (j < 2) cout << "   ";
+        }
+
+        if (i < 2) cout << " " << endl;
+    }
+    cout << endl;
+}
+
+//Use the placeToken function to place a token on the board.
+void placeToken(char token) {
     int row, col;
-    cout << "Player " << (token == player1Token ? "1 (X)" : "2 (O)") << "'s turn:" << endl;
-    getLocation(row, col, board);
+    getLocation(row, col);
     board[row][col] = token;
 }
 
-// 4. Prompt and validate location input
-void getLocation(int &row, int &col, const char board[boardSize][boardSize]) {
-    while (true) {
-        cout << "Enter row (1–3): ";
-        cin >> row;
-        cout << "Enter column (1–3): ";
-        cin >> col;
+//Use the getLocation function to get the location of the token from the user.
+void getLocation(int& row, int& col) {
+    bool validLocation = false;
 
-        row -= 1;
-        col -= 1;
+    //Loop until a valid location is entered
+    while (!validLocation) {
+        // Prompt user for to enter the row number where he or she would like to place a token.
+        do {
+            cout << "Enter row number (must be 1, 2, or 3): ";
+            cin >> row;
+            //Ensure that the row number entered is between 1 and 3.
+            if (row < 1 || row > 3) {
+                cout << "Row must be between 1 and 3. Please enter a different row number." << endl;
+            }
+        } while (row < 1 || row > 3);
 
-        if (row >= 0 && row < boardSize && col >= 0 && col < boardSize) {
-            if (board[row][col] == emptyCell)
-                return;
-            else
-                cout << "That cell is already taken. Try again." << endl;
-        } else {
-            cout << "Invalid input. Please enter numbers between 1 and 3." << endl;
+        //Prompt user to enter the column number where he or she would like to place a token.
+        do {
+            cout << "Enter column number (must be 1, 2, or 3): ";
+            cin >> col;
+            //Ensure that the column number entered is between 1 and 3.
+            if (col < 1 || col > 3) {
+                cout << "Column must be between 1 and 3. Please enter a different row number." << endl;
+            }
+        } while (col < 1 || col > 3);
+
+        //Because the board is 0-based (It is an array), 1 must be subtracted from both the row numbers and the column numbers entered by the user to get the correct index.
+        row--;
+        col--;
+
+        //Check if the space is empty. If it is, set validLocation to true. If it is not, prompt the user to enter a different row and column number.
+        if (board[row][col] == '*') {
+            validLocation = true;
+        }
+        else {
+            cout << "That space is already taken. Please choose another space that is empty, desigated by an asterisk (*)." << endl;
+
+    //Convert back to 1-based indexing for the next iteration. This is necessary because the row and column numbers are decremented by 1 to get the correct index.
+            row++;
+            col++;
         }
     }
 }
 
-// 5. Determine the current board state
-int getBoardState(char token, const char board[boardSize][boardSize]) {
-    int result = checkForWinner(token, board);
+int getBoardState(char token) {
+    int state = checkForWinner(token);
 
-    if (result == resultWinner)
-        return (token == player1Token) ? stateXWin : stateOWin;
-    else if (result == resultNoSpace)
-        return stateTie;
-    else
-        return statePlay;
+    if (state == WINNER) {
+        if (token == 'X') {
+            return X_WINS;
+        }
+        else {
+            return O_WINS;
+        }
+    }
+    else if (state == NO_SPACE) {
+        return TIE;
+    }
+    else {
+        return PLAY;
+    }
 }
 
-// 6. Check win conditions or available space
-int checkForWinner(char token, const char board[boardSize][boardSize]) {
-    // Check rows and columns
-    for (int i = 0; i < boardSize; ++i) {
-        if ((board[i][0] == token && board[i][1] == token && board[i][2] == token) ||
-            (board[0][i] == token && board[1][i] == token && board[2][i] == token)) {
-            return resultWinner;
+//Use the checkForWinner function to check if there is a winner and if there are spaces left on the board.
+int checkForWinner(char token) {
+
+    //Check rows.
+    for (int i = 0; i < 3; i++) {
+        if (board[i][0] == token && board[i][1] == token && board[i][2] == token) {
+            return WINNER;
         }
     }
 
-    // Check diagonals
-    if ((board[0][0] == token && board[1][1] == token && board[2][2] == token) ||
-        (board[0][2] == token && board[1][1] == token && board[2][0] == token)) {
-        return resultWinner;
+    //Check columns.
+    for (int j = 0; j < 3; j++) {
+        if (board[0][j] == token && board[1][j] == token && board[2][j] == token) {
+            return WINNER;
+        }
     }
 
-    // Check for remaining empty cells
-    for (int i = 0; i < boardSize; ++i)
-        for (int j = 0; j < boardSize; ++j)
-            if (board[i][j] == emptyCell)
-                return resultSpaceLeft;
+    //Check diagonals.
+    if (board[0][0] == token && board[1][1] == token && board[2][2] == token) {
+        return WINNER;
+    }
+    if (board[0][2] == token && board[1][1] == token && board[2][0] == token) {
+        return WINNER;
+    }
 
-    return resultNoSpace;
+    //Check for available spaces.
+    for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < 3; j++) {
+            if (board[i][j] == '*') {
+                return SPACE_LEFT;
+            }
+        }
+    }
+
+    //If there is no winner and there are no spaces left, return NO_SPACE.
+    return NO_SPACE;
 }
