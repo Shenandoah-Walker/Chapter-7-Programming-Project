@@ -18,12 +18,73 @@ const int WINNER = 2;
 char board[3][3];
 
 // Function prototypes
+
+/*
+Function: initializeBoard
+Purpose: Initializes the board with asterisks (*) to represent empty spaces.
+Parameters: None
+Returns: None
+Preconditions: None
+Postconditions: 
+ - The board is initialized with asterisks (*) to represent empty spaces.
+*/
 void initializeBoard();
+
+/*
+Function: displayBoard
+Purpose: Displays the board.
+Parameters: None
+Returns: None
+Preconditions: None
+Postconditions: The board is displayed.
+*/
 void displayBoard();
+
+/*
+Function: placeToken
+Purpose: Places a token on the board.
+Parameters: 
+ - token: The token to place on the board.
+Returns: None
+Preconditions: None
+Postconditions: The token is placed on the board.
+*/
 void placeToken(char token);
+
+/*
+Function: getLocation
+Purpose: Gets the location of the token from the user.
+Parameters:
+ - row: The row number where the token will be placed.
+ - col: The column number where the token will be placed.
+Returns: None
+Preconditions: None
+Postconditions: The row and column numbers are set to the location of the token.
+*/
 void getLocation(int& row, int& col);
+
+/*
+Function: getBoardState
+Purpose: Gets the state of the board.
+Parameters:
+ - token: The token to check for a winner.
+Returns: The state of the board.
+Preconditions: None
+Postconditions: The state of the board is returned.
+*/
 int getBoardState(char token);
+
+/*
+Function: checkForWinner
+Purpose: Checks if there is a winner and if there are spaces left on the board.
+Parameters:
+ - token: The token to check for a winner.
+Returns: The state of the board.
+Preconditions: None
+Postconditions: The state of the board is returned.
+*/
 int checkForWinner(char token);
+
 
 int main() {
     int boardState = PLAY;
