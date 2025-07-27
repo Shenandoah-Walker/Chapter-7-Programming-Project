@@ -81,7 +81,7 @@ void getTeams(string filename, vector<string>& teams) {
     infile.open(filename);
 
     if (infile.fail()) {
-        cout << "Error: Could not open file " << filename << endl;
+        cout << "Error: Could not open file " <<  filename << endl;
         exit(1);
     }
 
