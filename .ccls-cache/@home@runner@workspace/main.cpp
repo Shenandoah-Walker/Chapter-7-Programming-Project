@@ -14,7 +14,22 @@ Purpose: Read teams from file into vector
 Parameters:
  - filename: name of file to read from
  - teams: vector to store teams
+Returns: None
+Preconditions: None
+Postconditions: teams vector is populated with teams from file
+*/
 void getTeams(string filename, vector<string>& teams);
+
+/*
+Function: findWinner
+Purpose: Find the number of wins for a specific team
+Parameters:
+ - teamName: name of team to find wins for
+ - winners: vector of winners
+Returns: Number of wins for specified team
+Preconditions: None
+Postconditions: None
+*/
 int findWinner(string teamName, const vector<string>& winners);
 
 int main() {
@@ -40,6 +55,8 @@ int main() {
         cout << "Enter a team name (or 'quit' to exit): ";
         getline(cin, teamName);
 
+        
+        // Check if user wants to quit
         if (teamName == "quit") {
             break;
 

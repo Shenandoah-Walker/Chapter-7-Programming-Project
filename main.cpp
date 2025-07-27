@@ -40,21 +40,23 @@ int main() {
     // Read teams from file
     getTeams("Teams.txt", teams);
 
-    // Read winners from file
+    //Read winners from file.
     getTeams("WorldSeriesWinners.txt", winners);
 
-    // Display the list of teams
+    //Display the list of teams.
     cout << "World Series Teams:" << endl;
     for (const string& team : teams) {
         cout << team << endl;
     }
     cout << endl;
 
-    // Main loop for user interaction
+    //Prompt user for team name and display number of wins.
     while (true) {
         cout << "Enter a team name (or 'quit' to exit): ";
         getline(cin, teamName);
 
+        
+        //Check if user wants to quit using teamName as a sentinel.
         if (teamName == "quit") {
             break;
 
@@ -73,7 +75,7 @@ int main() {
     return 0;
 }
 
-// Function to read teams from file into vector
+//Use getTeams to read the teams from the file into the vector.
 void getTeams(string filename, vector<string>& teams) {
     ifstream infile;
     infile.open(filename);
@@ -91,11 +93,11 @@ void getTeams(string filename, vector<string>& teams) {
     infile.close();
 }
 
-//Use findWinner to find the number of wins for a specific team
+//Use findWinner to find the number of wins for a specific team.
 int findWinner(string teamName, const vector<string>& winners) {
     int count = 0;
 
-    //Use range-based for loop to iterate through winners
+    //Use a range-based for loop to iterate through winners.
     for (const string& winner : winners) {
         if (winner == teamName) {
             count++;
