@@ -34,6 +34,7 @@ Preconditions: The correctAnswers and studentAnswers arrays must be filled with 
 Postconditions: The missedQuestions and missedAnswersData arrays will be filled with the missed questions and answers.
 */
 int gradeExam(const char correctAnswers[], const char studentAnswers[], int missedQuestions[], char missedAnswersData[][2]);
+
 /*
 Function: writeReport
 Purpose: Writes the exam report to the console.
@@ -109,7 +110,7 @@ int gradeExam(const char correctAnswers[], const char studentAnswers[],
 
     return numMissed;
 }
-
+    //Write the exam report to the console.
 void writeReport(const int missedQuestions[], int numMissed,
                  const char missedAnswersData[][2]) {
     cout << "Exam Report Details" << endl;
@@ -125,12 +126,12 @@ void writeReport(const int missedQuestions[], int numMissed,
         }
     }
 
-    //Calculate and display percentage
+    //Calculate and display percentage, which is the number of questions answered correctly divided by the total number of questions, multiplied by 100. This represents the student's exam score.
     double percentage = ((double)(numQuestions - numMissed) / numQuestions) * 100.0;
     cout << fixed << setprecision(2);
     cout << "Test score: " << percentage << "%" << endl;
 
-    //Determine pass/fail
+    //If the grade percentage is 70% or higher, print "You passed the exam." Otherwise, print "You failed the exam."
     if (percentage >= 70.0) {
         cout << "You passed the exam." << endl;
     } else {
